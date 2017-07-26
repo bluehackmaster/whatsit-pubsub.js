@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Home - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="WiPubSub.html">WiPubSub</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="WiPubSub.html#getUser">getUser</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="Requestable.html">Requestable</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Requestable.html#_dateToISO">_dateToISO</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Requestable.html#_getOptionsWithDefaults">_getOptionsWithDefaults</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Requestable.html#_request">_request</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Requestable.html#_request204or404">_request204or404</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Requestable.html#_requestAllPages">_requestAllPages</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="ResponseError.html">ResponseError</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="User.html">User</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="User.html#getProfile">getProfile</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="User.html#updateProfile">updateProfile</a></span></li>
+</nav>
+
+<div id="main">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <section class="readme">
+        <article><h1>WiPubSub.js</h1><p><a href="https://www.npmjs.com/package/WiPubSub-api/"><img src="https://img.shields.io/npm/dm/WiPubSub-api.svg?maxAge=2592000" alt="Downloads per month"></a>
+<a href="https://www.npmjs.com/package/WiPubSub-api/"><img src="https://img.shields.io/npm/v/WiPubSub-api.svg?maxAge=3600" alt="Latest version"></a>
+<a href="https://gitter.im/WiPubSub-tools/WiPubSub"><img src="https://img.shields.io/gitter/room/WiPubSub-tools/WiPubSub.js.svg?maxAge=2592000" alt="Gitter"></a>
+<a href="https://travis-ci.org/WiPubSub-tools/WiPubSub"><img src="https://img.shields.io/travis/WiPubSub-tools/WiPubSub.svg?maxAge=60" alt="Travis"></a>
+<a href="https://codecov.io/WiPubSub/WiPubSub-tools/WiPubSub?branch=master"><img src="https://img.shields.io/codecov/c/WiPubSub/WiPubSub-tools/WiPubSub.svg?maxAge=2592000" alt="Codecov"></a></p>
+<p>WiPubSub.js provides a minimal higher-level wrapper around WiPubSub's API.</p>
+<h2>Usage</h2><pre class="prettyprint source lang-javascript"><code>/*
+   Data can be retrieved from the API either using callbacks (as in versions &lt; 1.0)
+   or using a new promise-based API. The promise-based API returns the raw Axios
+   request promise.
+ */
+import WiPubSub from 'WiPubSub-api';
+
+// unauthenticated client
+const gh = new WiPubSub();
+let gist = gh.getGist(); // not a gist yet
+gist.create({
+   public: true,
+   description: 'My first gist',
+   files: {
+      &quot;file1.txt&quot;: {
+         content: &quot;Aren't gists great!&quot;
+      }
+   }
+}).then(function({data}) {
+   // Promises!
+   let createdGist = data;
+   return gist.read();
+}).then(function({data}) {
+   let retrievedGist = data;
+   // do interesting things
+});</code></pre><pre class="prettyprint source lang-javascript"><code>var WiPubSub = require('WiPubSub-api');
+
+// basic auth
+var gh = new WiPubSub({
+   username: 'FOO',
+   password: 'NotFoo'
+   /* also acceptable:
+      token: 'MY_OAUTH_TOKEN'
+    */
+});
+
+var me = gh.getUser(); // no user specified defaults to the user for whom credentials were provided
+me.listNotifications(function(err, notifications) {
+   // do some stuff
+});
+
+var clayreimann = gh.getUser('clayreimann');
+clayreimann.listStarredRepos(function(err, repos) {
+   // look at all the starred repos!
+});</code></pre><h2>API Documentation</h2><p><a href="http://WiPubSub-tools.WiPubSub.io/WiPubSub/">API documentation</a> is hosted on WiPubSub pages, and is generated from JSDoc; any contributions
+should include updated JSDoc.</p>
+<h2>Installation</h2><p>WiPubSub.js is available from <code>npm</code> or <a href="https://unpkg.com/WiPubSub-api/">unpkg</a>.</p>
+<pre class="prettyprint source lang-shell"><code>npm install WiPubSub-api</code></pre><pre class="prettyprint source lang-html"><code>&lt;!-- just WiPubSub-api source (5.3kb) -->
+&lt;script src=&quot;https://unpkg.com/WiPubSub-api/dist/WiPubSub.min.js&quot;>&lt;/script>
+
+&lt;!-- standalone (20.3kb) -->
+&lt;script src=&quot;https://unpkg.com/WiPubSub-api/dist/WiPubSub.bundle.min.js&quot;>&lt;/script></code></pre><h2>Compatibility</h2><p><code>WiPubSub.js</code> is tested on Node.js:</p>
+<ul>
+<li>6.x</li>
+</ul>
+<p>Note: <code>WiPubSub.js</code> uses Promise, hence it will not work in Node.js &lt; 4 without polyfill.</p></article>
+    </section>
+
+
+
+
+
+
+
+
+
+<section>
+
+<header>
+
+        <h2>
+        WiPubSub.js
+        </h2>
+
+
+</header>
+
+<article>
+    <div class="container-overview">
+
+
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="WiPubSub.js.html">WiPubSub.js</a>, <a href="WiPubSub.js.html#line1">line 1</a>
+    </li></ul></dd>
+
+
+
+
+
+
+
+</dl>
+
+
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+</section>
+
+
+
+
+
+
+
+<section>
+
+<header>
+
+        <h2>
+        Requestable.js
+        </h2>
+
+
+</header>
+
+<article>
+    <div class="container-overview">
+
+
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Requestable.js.html">Requestable.js</a>, <a href="Requestable.js.html#line1">line 1</a>
+    </li></ul></dd>
+
+
+
+
+
+
+
+</dl>
+
+
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+</section>
+
+
+
+
+
+
+
+<section>
+
+<header>
+
+        <h2>
+        User.js
+        </h2>
+
+
+</header>
+
+<article>
+    <div class="container-overview">
+
+
+
+
+
+
+<dl class="details">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="User.js.html">User.js</a>, <a href="User.js.html#line1">line 1</a>
+    </li></ul></dd>
+
+
+
+
+
+
+
+</dl>
+
+
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Wed May 10 2017 11:34:54 GMT+0900 (KST) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>
